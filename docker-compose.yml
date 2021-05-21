@@ -41,6 +41,29 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://db/microservices
 
+  vroom:
+    image: vroomvrp/vroom-docker:v1.10.0
+    container_name: vroom
+    ports:
+      - "3100:3000"
+    volumes:
+      - ./vroom-conf/:/conf
+    environment:
+      - VROOM_ROUTER=osrm # router to use, osrm, valhalla or ors
+    depends_on:
+      - osrm
+
+  # EXAMPLE for OSRM, please consult the repo for details: https://hub.docker.com/r/osrm/osrm-backend/
+  osrm:
+    image: osrm/osrm-backend
+    container_name: osrm
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./osrm:/data
+    command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/socal-latest.osrm"
+
   db:
     image: mongo
     ports:
