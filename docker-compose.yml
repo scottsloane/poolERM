@@ -23,6 +23,15 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://db/microservices
 
+  appointment:
+    build: "./Services/appointment"
+    ports:
+      - "3003:3000"
+    depends_on:
+      - db
+    environment:
+      - MONGO_DB_URI=mongodb://db/microservices
+
   db:
     image: mongo
     ports:
