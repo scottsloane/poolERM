@@ -1,13 +1,14 @@
 {
   "name": "customer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Customer microservice for PoolERM",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Scott Sloane",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
