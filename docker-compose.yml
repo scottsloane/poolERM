@@ -14,6 +14,15 @@ services:
     environment:
       - MONGO_DB_URI=mongodb://db/microservices
 
+  customer:
+    build: "./Services/customer"
+    ports:
+      - "3002:3000"
+    depends_on:
+      - db
+    environment:
+      - MONGO_DB_URI=mongodb://db/microservices
+
   db:
     image: mongo
     ports:
