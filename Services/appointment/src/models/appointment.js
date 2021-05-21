@@ -2,7 +2,7 @@ module.exports = () => {
 
     const _data = {
         _id : null,
-        custome: null,
+        customer: null,
         date: null
     }
 
