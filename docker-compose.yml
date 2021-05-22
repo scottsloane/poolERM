@@ -74,8 +74,12 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./Services/web/public:/srv/www/static
+      # - ./Services/web/public:/srv/www/static
       - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
       - search
+      - customer
+      - appointment
+      - execution
+      - vroom

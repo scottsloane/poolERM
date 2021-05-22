@@ -8,4 +8,8 @@ app.get("/", (req, res) => {
     res.json({ msg: "appointment" });
 });
 
+app.get("/api/v1/appointment/test", (req, res) => {
+    res.json({ msg: "appointment" });
+});
+
 module.exports = app;

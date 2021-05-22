@@ -1,9 +1,27 @@
-const express = require("express");
-const path = require("path");
-const app = express();
+import React, { Fragment } from 'react';
+import './App.css';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "..", "public", "index.html"));
-});
+import Routes from './Routes';
+import NavigationBar from './components/navigationbar';
 
-module.exports = app;
+
+function App() {
+  return (
+    <Router>
+      <main>
+        <NavigationBar />
+        <Switch>
+          {Routes.map((route) => (
+            <Route exact path={route.path} key={route.path}>
+              <route.component />
+            </Route>
+          ))}
+        </Switch>
+      </main>
+    </Router>
+  
+  );
+}
+
+export default App;
