@@ -31,9 +31,10 @@ app.get("/api/v1/customer", (req, res) => {
 
 app.get("/api/v1/customer/meta", (req, res) => {
     res.json([
-        [
-
-        ]
+        {title: "id", field: "id", hidden: true},
+        {title: "First name", field: "firstName"},
+        {title: "Last name", field: "lastName"},
+        {title: "email", field: "email"}
     ]);
 });
 
