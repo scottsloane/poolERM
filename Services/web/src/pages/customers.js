@@ -1,25 +1,23 @@
-import React, { Fragment, Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Fragment } from 'react';
 
 import Avatar from 'react-avatar';
 
 import Table from "../components/table";
 
-import '../App.css';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+// import Button from '@material-ui/core/Button';
+// import ButtonGroup from '@material-ui/core/ButtonGroup';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import NavigationIcon from '@material-ui/icons/Navigation';
-import FavoriteIcon from '@material-ui/icons/FavoriteTwoTone';
+// import AddIcon from '@material-ui/icons/Add';
+// import EditIcon from '@material-ui/icons/Edit';
+// import NavigationIcon from '@material-ui/icons/Navigation';
+// import FavoriteIcon from '@material-ui/icons/FavoriteTwoTone';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import TextField from '@material-ui/core/TextField'
-import { DataGrid } from '@material-ui/data-grid';
-import Fab from '@material-ui/core/Fab'
+// import TextField from '@material-ui/core/TextField'
+// import { DataGrid } from '@material-ui/data-grid';
+// import Fab from '@material-ui/core/Fab'
 
 function CheckboxExample() {
     const [checked, setChecked] = React.useState(true)

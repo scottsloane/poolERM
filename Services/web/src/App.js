@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import './App.css';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 import Routes from './Routes';
 import NavigationBar from './components/navigationbar';
+import Location from './components/location'
 
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
             </Route>
           ))}
         </Switch>
+        <Location></Location>
       </main>
     </Router>
   

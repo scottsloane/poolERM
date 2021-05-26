@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { forwardRef } from 'react';
-import Avatar from 'react-avatar';
+//import Avatar from 'react-avatar';
 import Grid from '@material-ui/core/Grid'
 
 import MaterialTable from "material-table";
