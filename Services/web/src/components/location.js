@@ -4,10 +4,8 @@ export default function Location() {
     let [lattitude, setLattitude] = useState(0);
     let [longitude, setLongitude] = useState(0);
     function success(position) {
-        return ([
-            setLattitude(position.coords.latitude),
-            setLongitude(position.coords.longitude)
-        ]);
+            setLattitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
     };  
     function error(err) {
       console.log(err);
