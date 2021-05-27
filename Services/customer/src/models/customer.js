@@ -1,23 +1,23 @@
-const merge_into = (a,b) => {
-    Object.keys(b).forEach((k,i)=>{
-        if(typeof b[key] === 'object'){
+const merge_into = (a, b) => {
+    Object.keys(b).forEach((key, i) => {
+        if (typeof b[key] === 'object') {
             return merge_into(a[key], b[key]);
         }
-        if(typeof a[key] !== 'undefined') b[key] = a[key];
+        if (typeof a[key] !== 'undefined') b[key] = a[key];
         return b;
     });
 }
 
 module.exports = async (db, _data) => {
-   
-    const data = {
-        _id : null,
-        name : {
-            first : null,
+
+    let data = {
+        _id: null,
+        name: {
+            first: null,
             middle: null,
             last: null
         },
-        address : {
+        address: {
             service: {
                 street: null,
                 street2: null,
@@ -29,7 +29,7 @@ module.exports = async (db, _data) => {
                     lon: null
                 }
             },
-            billing : {
+            billing: {
                 same: true,
                 street: null,
                 street2: null,
@@ -37,29 +37,54 @@ module.exports = async (db, _data) => {
                 state: null,
                 zip: null
             }
-        }
+        },
+        status : 1
     }
 
-    if(typeof data !== 'undefined') {
-        if(typeof data === 'object') {
-            data = merge_into(_data, data);       
+    if (typeof _data !== 'undefined') {
+        if (typeof _data === 'object') {
+            data = merge_into(_data, data);
         } else {
-            await fetch(data);
+            await fetch(_data);
         }
     }
 
-    const fetch = (id) => {
-        return new Promise((resolve, reject)=>{
-            return resolve(true)
+    const fetch = (_id) => {
+        return new Promise(async (resolve, reject) => {
+            if(typeof _id === 'undefined') {
+                let res = await db.collection('customer').find({}).toArray();
+                console.log(res)
+                return resolve(res);
+            } else {
+                let res = await db.collection('customer').findOne({
+                    _id
+                }).catch(err => {
+                    return reject(err);
+                });
+                data = merge_into(res, data);
+                return resolve(data);
+            }
         });
     }
 
-    const save = () => {
+    const update = (_data) => {
+        data = merge_into(_data, data);
+    }
 
+    const save = () => {
+        return new Promise(async (resolve, reject) => {
+            let res = await db.collection('customer').insertOne(data, {
+                upsert: true
+            }).catch(err => {
+                return reject(err);
+            });
+            return resolve(res)
+        });
     }
 
     return {
         fetch,
+        update,
         save,
         data
     }
