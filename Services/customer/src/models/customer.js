@@ -1,11 +1,14 @@
+const { ObjectID } = require("bson");
+
 const merge_into = (a, b) => {
     Object.keys(b).forEach((key, i) => {
-        if (typeof b[key] === 'object') {
+        if (typeof b[key] === 'object' && b[key] !== null) {
+          if(typeof a[key] === 'undefined') a[key] = {};
             return merge_into(a[key], b[key]);
         }
         if (typeof a[key] !== 'undefined') b[key] = a[key];
-        return b;
     });
+  return b;
 }
 
 module.exports = async (db, _data) => {
@@ -41,19 +44,15 @@ module.exports = async (db, _data) => {
         status : 1
     }
 
-    if (typeof _data !== 'undefined') {
-        if (typeof _data === 'object') {
-            data = merge_into(_data, data);
-        } else {
-            await fetch(_data);
-        }
-    }
-
     const fetch = (_id) => {
         return new Promise(async (resolve, reject) => {
+            try {
+                if(typeof _id === 'string') _id = ObjectID(_id);
+            }catch(e){
+                return reject(e);
+            }
             if(typeof _id === 'undefined') {
                 let res = await db.collection('customer').find({}).toArray();
-                console.log(res)
                 return resolve(res);
             } else {
                 let res = await db.collection('customer').findOne({
@@ -61,6 +60,7 @@ module.exports = async (db, _data) => {
                 }).catch(err => {
                     return reject(err);
                 });
+                
                 data = merge_into(res, data);
                 return resolve(data);
             }
@@ -73,13 +73,29 @@ module.exports = async (db, _data) => {
 
     const save = () => {
         return new Promise(async (resolve, reject) => {
-            let res = await db.collection('customer').insertOne(data, {
-                upsert: true
-            }).catch(err => {
-                return reject(err);
-            });
-            return resolve(res)
+            let res = null;
+            if(data._id === null){
+                res = await db.collection('customer').insertOne(data, {
+                    upsert: true
+                }).catch(err => {
+                    return reject(err);
+                });
+            }else{
+                res = await db.collection('customer').replaceOne({_id: data._id}, data).catch(err => {
+                    return reject(err);
+                });
+            }
+            
+            return resolve(res.insertedId)
         });
+    }
+
+    if (typeof _data !== 'undefined') {
+        if (typeof _data === 'object') {
+            data = merge_into(_data, data);
+        } else {
+            await fetch(_data);
+        }
     }
 
     return {
