@@ -15,33 +15,14 @@ module.exports = async (db, _data) => {
 
     let data = {
         _id: null,
-        customer: null,
-        time : null,
-        tasks : null,
-        actions: null,
-        status : 1
+        name: null,
+        description: null,
+        resources : [],
+        estimate : {
+            time: null,
+            cost: null
+        }
     }
-
-    const tasks = (() => {
-
-        const add = (_tasks) => {
-            if(typeof _tasks !== 'object' && !Array.isArray(_tasks)) _tasks = [_tasks];
-            if(data.tasks === null) data.tasks = [];
-
-            for(let _t of _tasks) {
-                _tasks.push(_t);
-            }
-        }
-
-        const clear = () => {
-            data.tasks = [];
-        }
-
-        return {
-            add,
-            clear
-        }
-    })();
 
     const fetch = (_id) => {
         return new Promise(async (resolve, reject) => {
@@ -51,10 +32,10 @@ module.exports = async (db, _data) => {
                 return reject(e);
             }
             if(typeof _id === 'undefined') {
-                let res = await db.collection('appointment').find({}).toArray();
+                let res = await db.collection('task').find({}).toArray();
                 return resolve(res);
             } else {
-                let res = await db.collection('appointment').findOne({
+                let res = await db.collection('task').findOne({
                     _id
                 }).catch(err => {
                     return reject(err);
@@ -74,13 +55,13 @@ module.exports = async (db, _data) => {
         return new Promise(async (resolve, reject) => {
             let res = null;
             if(data._id === null){
-                res = await db.collection('appointment').insertOne(data, {
+                res = await db.collection('task').insertOne(data, {
                     upsert: true
                 }).catch(err => {
                     return reject(err);
                 });
             }else{
-                res = await db.collection('appointment').replaceOne({_id: data._id}, data).catch(err => {
+                res = await db.collection('task').replaceOne({_id: data._id}, data).catch(err => {
                     return reject(err);
                 });
             }
@@ -101,7 +82,6 @@ module.exports = async (db, _data) => {
         fetch,
         update,
         save,
-        tasks,
         data
     }
 }
