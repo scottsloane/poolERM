@@ -69,6 +69,15 @@ services:
     ports:
       - "27017:27017"
 
+  sql-server-db:
+    container_name: sql-server-db
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "DTu0cin130!!"
+      ACCEPT_EULA: "Y"
+
   nginx:
     image: nginx:latest
     ports:
