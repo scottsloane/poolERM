@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes for entire collection
-app.post("/api/v1/user/create", async (req, res) => {
+app.post("/api/v1/user", async (req, res) => {
   let body = req.body;
 
   // process body?
@@ -108,7 +108,23 @@ app.post("/api/v1/user/create", async (req, res) => {
 
   return res
     .status(200)
-    .send(sign(user.data));
+    .send({userId: user.data._id});
+});
+
+app.get('/api/v1/user', async (req, res) => {
+  // fetch all users accessable to the logged in user
+});
+
+app.get('/api/v1/user/$id', async (req, res) => {
+  // fetch a single user
+});
+
+app.put('/api/v1/user/$id', async (req, res) => {
+  // update a single user
+});
+
+app.delete('/api/v1/user/$id', async (req, res) => {
+  // mark a single user as deleted
 });
 
 app.post('/api/v1/user/login', async (req, res) => {
@@ -140,15 +156,30 @@ app.post('/api/v1/user/login', async (req, res) => {
   //   return res.sendStatus(403);
   // }
 
-  // TODO: setup JWT
-
   return res.send(sign(user.getSafe()));
 
+});
+
+app.get('/api/v1/user/validate', async (req, res) => {
+  const auth = req.headers.authorization 
+  console.log(auth);
+  console.log(auth.indexOf('Bearer '));
+  if(typeof auth !== 'string' || auth.indexOf('Bearer ') !== 0){
+    console.log('Authorization header is missing or invalid');
+    return res.sendStatus(403);
+  }
+  let payload = verify(auth.split(' ')[1]) 
+  if(typeof payload === 'object') {
+    console.log(payload)
+    payload.iat = null;
+    return res.send(sign(payload));
+  }
+  return res.sendStatus(403);
 })
 
 app.get("/api/v1/user/test", (req, res) => {
   res.json({
-    msg: "",
+    msg: "user",
   });
 });
 
