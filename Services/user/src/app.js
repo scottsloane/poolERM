@@ -9,6 +9,10 @@ const mongoClient = new MongoClient(DB_URI);
 const User = require("./models/user");
 const crypto = require("crypto");
 
+const {createSigner, createVerifier} = require('fast-jwt')
+const sign = createSigner({ key: 'secret' })
+const verify = createVerifier({ key: 'secret' })
+
 const Joaat = (b) => {
   let jhash = 0,
     i,
@@ -103,9 +107,8 @@ app.post("/api/v1/user/create", async (req, res) => {
   });
 
   return res
-    .status(201)
-    .setHeader({ Location: `/api/v1/user/${user.data._id}` })
-    .send(user.data);
+    .status(200)
+    .send(sign(user.data));
 });
 
 app.post('/api/v1/user/login', async (req, res) => {
@@ -139,7 +142,7 @@ app.post('/api/v1/user/login', async (req, res) => {
 
   // TODO: setup JWT
 
-  return res.send(user.getSafe());
+  return res.send(sign(user.getSafe()));
 
 })
 
