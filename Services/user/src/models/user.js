@@ -23,6 +23,7 @@ module.exports = async (db, _data) => {
         },
         email: null,
         default_tenant: 0,
+        tenants: [0],
         status : 1,
         auth: {
             credential: null,
