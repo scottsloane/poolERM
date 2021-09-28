@@ -5,78 +5,85 @@ services:
     ports:
       - "3000:3000"
 
-  search:
-    build: "./Services/search"
+  user:
+    build: "./Services/user"
     ports:
       - "3001:3000"
     depends_on:
-      - db
+      - masterdb
+      - userdb
     environment:
-      - MONGO_DB_URI=mongodb://db/microservices
+      - MONGO_DB_URI=mongodb://userdb/user
+      - MONGO_DB_NAME=user
 
-  customer:
-    build: "./Services/customer"
-    ports:
-      - "3002:3000"
-    depends_on:
-      - db
-    environment:
-      - MONGO_DB_URI=mongodb://db/microservices
-
-  appointment:
-    build: "./Services/appointment"
-    ports:
-      - "3003:3000"
-    depends_on:
-      - db
-    environment:
-      - MONGO_DB_URI=mongodb://db/microservices
-
-  execution:
-    build: "./Services/execution"
-    ports:
-      - "3004:3000"
-    depends_on:
-      - db
-    environment:
-      - MONGO_DB_URI=mongodb://db/microservices
-
-  vroom:
-    image: vroomvrp/vroom-docker:v1.10.0
-    container_name: vroom
-    ports:
-      - "3100:3000"
-    volumes:
-      - ./vroom-conf/:/conf
-    environment:
-      - VROOM_ROUTER=osrm # router to use, osrm, valhalla or ors
-    depends_on:
-      - osrm
-
-  # EXAMPLE for OSRM, please consult the repo for details: https://hub.docker.com/r/osrm/osrm-backend/
-  osrm:
-    image: osrm/osrm-backend
-    container_name: osrm
-    restart: always
-    ports:
-      - 5000:5000
-    volumes:
-      - ./osrm:/data
-    command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/socal-latest.osrm"
-
-  db:
+  userdb:
     image: mongo
     ports:
-      - "27017:27017"
+      - "4001:27017"
 
-  sql-server-db:
-    container_name: sql-server-db
-    image: mcr.microsoft.com/mssql/server
+  # search:
+  #   build: "./Services/search"
+  #   ports:
+  #     - "3001:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - MONGO_DB_URI=mongodb://db/microservices
+
+  # customer:
+  #   build: "./Services/customer"
+  #   ports:
+  #     - "3002:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - MONGO_DB_URI=mongodb://db/microservices
+
+  # appointment:
+  #   build: "./Services/appointment"
+  #   ports:
+  #     - "3003:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - MONGO_DB_URI=mongodb://db/microservices
+
+  # execution:
+  #   build: "./Services/execution"
+  #   ports:
+  #     - "3004:3000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - MONGO_DB_URI=mongodb://db/microservices
+
+  # vroom:
+  #   image: vroomvrp/vroom-docker:v1.10.0
+  #   container_name: vroom
+  #   ports:
+  #     - "3100:3000"
+  #   volumes:
+  #     - ./vroom-conf/:/conf
+  #   environment:
+  #     - VROOM_ROUTER=osrm # router to use, osrm, valhalla or ors
+  #   depends_on:
+  #     - osrm
+
+  # # EXAMPLE for OSRM, please consult the repo for details: https://hub.docker.com/r/osrm/osrm-backend/
+  # osrm:
+  #   image: osrm/osrm-backend
+  #   container_name: osrm
+  #   restart: always
+  #   ports:
+  #     - 5000:5000
+  #   volumes:
+  #     - ./osrm:/data
+  #   command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/socal-latest.osrm"
+
+  masterdb:
+    image: mongo
     ports:
-      - "1433:1433"
-    environment:
-      SA_PASSWORD: "DTu0cin130!!"
-      ACCEPT_EULA: "Y"
+      - "4000:27017"
 
   nginx:
     image: nginx:latest
@@ -87,8 +94,9 @@ services:
       - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
-      - search
-      - customer
-      - appointment
-      - execution
-      - vroom
+      - user
+      # - search
+      # - customer
+      # - appointment
+      # - execution
+      # - vroom
